@@ -5,7 +5,7 @@ manual crown data.
 """
 import datetime
 import glob
-import json
+import json 
 import logging
 import os
 import random
@@ -413,6 +413,7 @@ def get_filenames(directory: str):
     Args:
         directory (str): directory of images to be predicted on
     """
+    print ("getting filenames")
     dataset_dicts = []
     files = glob.glob(directory + "*.png")
     for filename in [file for file in files]:
