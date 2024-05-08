@@ -416,7 +416,9 @@ def get_filenames(directory: str):
     print ("getting filenames")
     dataset_dicts = []
     files = glob.glob(directory + "*.png")
+    print (files)
     for filename in [file for file in files]:
+        print (filename)
         file = {}
         filename = os.path.join(directory, filename)
         file["file_name"] = filename
