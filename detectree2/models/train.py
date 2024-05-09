@@ -500,74 +500,72 @@ def load_json_arr(json_path):
     return lines
 
 
-def setup_cfg(
-    base_model: str = "COCO-InstanceSegmentation/mask_rcnn_R_101_FPN_3x.yaml",
-    trains=("trees_train", ),
-    tests=("trees_val", ),
+def config(
+    model: str = "COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml",
+    #COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml
+    #COCO-InstanceSegmentation/mask_rcnn_R_101_FPN_3x.yaml
+    trains=("tree_train",),
+    tests=("tree_val",),
     update_model=None,
+    #eventually change the first one with the best model to reload old performances
+    #fg.MODEL.WEIGHTS ="C:/Projects/detectron2/kaggle/2nd/model_best.pth"
     workers=2,
-    ims_per_batch=2,
-    gamma=0.1,
-    backbone_freeze=3,
-    warm_iter=120,
-    momentum=0.9,
-    batch_size_per_im=1024,
-    base_lr=0.0003389,
-    weight_decay=0.001,
-    max_iter=1000,
+    ims_per_batch=30,
+    #gamma=0.1,
+    #backbone_freeze=2,
+    #momentum=0.9,
+    batch_size_per_im=128,
+    base_lr=0.00025,
+    #weight_decay=0.00025,
+    max_iter=1500,
     num_classes=1,
-    eval_period=100,
-    out_dir="./train_outputs",
-    resize=True,
-):
-    """Set up config object # noqa: D417.
+    eval_period=150,
+    out_dir="C:/Projects/detectron2/models/48th",
+    #resize=True,
 
-    Args:
-        base_model: base pre-trained model from detectron2 model_zoo
-        trains: names of registered data to use for training
-        tests: names of registered data to use for evaluating models
-        update_model: updated pre-trained model from detectree2 model_garden
-        workers: number of workers for dataloader
-        ims_per_batch: number of images per batch
-        gamma: gamma for learning rate scheduler
-        backbone_freeze: backbone layer to freeze
-        warm_iter: number of iterations for warmup
-        momentum: momentum for optimizer
-        batch_size_per_im: batch size per image
-        base_lr: base learning rate
-        weight_decay: weight decay for optimizer
-        max_iter: maximum number of iterations
-        num_classes: number of classes
-        eval_period: number of iterations between evaluations
-        out_dir: directory to save outputs
-    """
+):
+
     cfg = get_cfg()
-    cfg.merge_from_file(model_zoo.get_config_file(base_model))
+    cfg.merge_from_file(model_zoo.get_config_file(model))
+    #values to perform image normalization
+    #cfg.INPUT.PIXEL_MEAN = [0.3726495,  0.4023121, 0.2834796] #103.530, 116.280, 123.675, 0.3099664
+    #cfg.INPUT.PIXEL_STD = [0.1705017,  0.1694240, 0.1679476 ]  #1.0, 1.0, 1.0, 1.316826
+    #0.3726495,  0.4023121, 0.2834796
+    #0.1705017,  0.1694240, 0.1679476
     cfg.DATASETS.TRAIN = trains
     cfg.DATASETS.TEST = tests
     cfg.DATALOADER.NUM_WORKERS = workers
+    cfg.INPUT.FORMAT = "RGB"
     cfg.SOLVER.IMS_PER_BATCH = ims_per_batch
-    cfg.SOLVER.GAMMA = gamma
-    cfg.MODEL.BACKBONE.FREEZE_AT = backbone_freeze
-    cfg.SOLVER.WARMUP_ITERS = warm_iter
-    cfg.SOLVER.MOMENTUM = momentum
+    #cfg.SOLVER.GAMMA = gamma
+    #cfg.MODEL.BACKBONE.FREEZE_AT = backbone_freeze
+    #cfg.SOLVER.WARMUP_ITERS = warm_iter
+    #cfg.SOLVER.MOMENTUM = momentum
     cfg.MODEL.RPN.BATCH_SIZE_PER_IMAGE = batch_size_per_im
-    cfg.SOLVER.WEIGHT_DECAY = weight_decay
+    #cfg.SOLVER.WEIGHT_DECAY = weight_decay
     cfg.SOLVER.BASE_LR = base_lr
+    cfg.SOLVER.AMP.ENABLED = True
     cfg.OUTPUT_DIR = out_dir
     os.makedirs(cfg.OUTPUT_DIR, exist_ok=True)
     if update_model is not None:
         cfg.MODEL.WEIGHTS = update_model
     else:
-        cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url(base_model)
+        #start training your model from pre-trained weights available in the Detectron2 model zoo. These pre-trained weights can provide a good initialization for your model and potentially improve training convergence and performance
+        cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url(model)
 
     cfg.SOLVER.IMS_PER_BATCH = ims_per_batch
-    cfg.SOLVER.BASE_LR = base_lr
     cfg.SOLVER.MAX_ITER = max_iter
+    cfg.SOLVER.BASE_LR = base_lr
+    #cfg.SOLVER.LR_SCHEDULER_NAME = "WarmupCosineLR"
+    cfg.SOLVER.WARMUP_ITERS = int(0.2*cfg.SOLVER.MAX_ITER)
     cfg.MODEL.ROI_HEADS.NUM_CLASSES = num_classes
     cfg.TEST.EVAL_PERIOD = eval_period
-    cfg.RESIZE = resize
-    cfg.INPUT.MIN_SIZE_TRAIN = 1000
+    #cfg.RESIZE = resize
+    #cfg.INPUT.MIN_SIZE_TRAIN = 1000
+    with open(cfg.OUTPUT_DIR+'/config.yaml', 'w') as config:
+        yaml.dump(cfg, config)
+        config.close()
+
     return cfg
 
 
