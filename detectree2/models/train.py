@@ -10,7 +10,6 @@ import logging
 import os
 import random
 import time
-import yaml
 from pathlib import Path
 from typing import Any, Dict, List
 
@@ -562,10 +561,6 @@ def setup_cfg(
     cfg.TEST.EVAL_PERIOD = eval_period
     #cfg.RESIZE = resize
     #cfg.INPUT.MIN_SIZE_TRAIN = 1000
-    with open(cfg.OUTPUT_DIR+'/config.yaml', 'w') as config:
-        yaml.dump(cfg, config)
-        config.close()
-
     return cfg
 
 
