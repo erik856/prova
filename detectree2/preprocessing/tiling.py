@@ -118,16 +118,16 @@ def tile_data(
             out_img, out_transform = mask(data, shapes=coords, crop=True)
 
             # Discard scenes with many out-of-range pixels
-            out_sumbands = np.sum(out_img, 0)
-            zero_mask = np.where(out_sumbands == 0, 1, 0)
-            nan_mask = np.where(out_sumbands == 765, 1, 0)
-            sumzero = zero_mask.sum()
-            sumnan = nan_mask.sum()
-            totalpix = out_img.shape[1] * out_img.shape[2]
-            if sumzero > 0.25 * totalpix:
-                continue
-            elif sumnan > 0.25 * totalpix:
-                continue
+            #out_sumbands = np.sum(out_img, 0)
+            #zero_mask = np.where(out_sumbands == 0, 1, 0)
+            #nan_mask = np.where(out_sumbands == 765, 1, 0)
+            #sumzero = zero_mask.sum()
+            #sumnan = nan_mask.sum()
+            #totalpix = out_img.shape[1] * out_img.shape[2]
+            #if sumzero > 0.25 * totalpix:
+            #    continue
+            #elif sumnan > 0.25 * totalpix:
+            #    continue
 
             out_meta = data.meta.copy()
             out_meta.update({
