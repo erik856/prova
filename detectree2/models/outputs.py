@@ -346,7 +346,6 @@ def calc_iou(shape1, shape2):
 def clean_crowns(crowns: gpd.GeoDataFrame,
                  iou_threshold: float = 0.7,
                  confidence: float = 0.2,
-                 area_threshold: float = 2,
                  field: str = "Confidence_score") -> gpd.GeoDataFrame:
     """Clean overlapping crowns.
 
@@ -370,7 +369,7 @@ def clean_crowns(crowns: gpd.GeoDataFrame,
     crowns = crowns[~crowns.is_empty & crowns.is_valid]
 
     # Filter any rows with polgon of less than 1m2 as these are likely to be artifacts
-    crowns = crowns[crowns.area > area_threshold]
+    #crowns = crowns[crowns.area > area_threshold]
 
     crowns.reset_index(drop=True, inplace=True)
 
