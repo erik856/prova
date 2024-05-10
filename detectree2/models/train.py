@@ -500,7 +500,7 @@ def load_json_arr(json_path):
     return lines
 
 
-def config(
+def setup_cfg(
     model: str = "COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml",
     #COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml
     #COCO-InstanceSegmentation/mask_rcnn_R_101_FPN_3x.yaml
@@ -522,7 +522,6 @@ def config(
     eval_period=150,
     out_dir="C:/Projects/detectron2/models/48th",
     #resize=True,
-
 ):
 
     cfg = get_cfg()
