@@ -84,9 +84,9 @@ def tile_data(
     tile_count = 0
     print(f"Tiling to {total_tiles} total tiles")
 
-    for minx in np.arange(data.bounds[0], data.bounds[2] - tile_width,
+    for minx in np.arange(data.bounds[0], data.bounds[2],
                           tile_width, int):
-        for miny in np.arange(data.bounds[1], data.bounds[3] - tile_height,
+        for miny in np.arange(data.bounds[1], data.bounds[3],
                               tile_height, int):
 
             tile_count += 1
