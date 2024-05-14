@@ -515,12 +515,12 @@ def setup_cfg(
     #backbone_freeze=2,
     #momentum=0.9,
     batch_size_per_im=512,
-    base_lr=0.00025,
+    base_lr=0.0003,
     #weight_decay=0.00025,
     max_iter=1500,
     num_classes=1,
     eval_period=150,
-    out_dir="C:/Projects/detectron2/models/61th",
+    out_dir="C:/Projects/detectron2/models/48th",
     #resize=True,
 ):
 
